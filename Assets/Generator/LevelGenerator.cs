@@ -16,6 +16,8 @@ public class LevelGenerator : MonoBehaviour
 
     [Range(0, 100)]
     [SerializeField] int fillPercentage;
+    [SerializeField] int filledRegionMinSize;
+    [SerializeField] int emptyRegionMinSize;
     [SerializeField] int smoothingIterations;
     [SerializeField] int smoothingThreshold;
     [SerializeField] int branchingIterations;
@@ -25,7 +27,7 @@ public class LevelGenerator : MonoBehaviour
 
     private void Awake()
     {
-        if (useRandomSeed) seed = DateTime.Now.ToString();
+        if (useRandomSeed) seed = DateTime.Now.Ticks.ToString();
     }
 
     void Start()
@@ -37,7 +39,7 @@ public class LevelGenerator : MonoBehaviour
     {
         if (generateNewLevel)
         {
-            if (useRandomSeed) seed = DateTime.Now.ToString();
+            if (useRandomSeed) seed = DateTime.Now.Ticks.ToString();
             GenerateNewLevel();
             generateNewLevel = false;
         }
@@ -87,6 +89,7 @@ public class LevelGenerator : MonoBehaviour
     {
         for (int i = 0; i < smoothingIterations; i++) ApplySmoothing();
         for (int i = 0; i < branchingIterations; i++) ApplyBranching();
+        CleanCells();
         //ApplySmoothing();
     }
 
@@ -154,14 +157,9 @@ public class LevelGenerator : MonoBehaviour
                 }
                 //thicken branches
                 surroundingFilledCells = GetSurroundingFilledCells(x, y);
-                if(surroundingFilledCells == 4 && map[x,y] == 0)
+                if (surroundingFilledCells == 4 && map[x, y] == 0)
                 {
                     map[x, y] = 1;
-                }
-                //remove floating filled cells
-                else if (surroundingFilledCells == 0 && map[x, y] == 1)
-                {
-                    map[x, y] = 0;
                 }
             }
         }
@@ -187,6 +185,12 @@ public class LevelGenerator : MonoBehaviour
                         {
                             filledX = -1;
                         }
+                        if (surroundingX != filledX && surroundingY != filledY)
+                        {
+                            filledX = -1;
+                            filledY = -1;
+                        }
+                        //for first filled square found
                         if (filledX == -1 && filledY == -1)
                         {
                             filledX = surroundingX;
@@ -199,8 +203,93 @@ public class LevelGenerator : MonoBehaviour
         return !(filledX == -1 && filledY == -1);
     }
 
+    void CleanCells()
+    {
+        List<List<Vector2Int>> filledRegions = GetRegions(1);
+
+        foreach (List<Vector2Int> region in filledRegions)
+        {
+            if (region.Count < filledRegionMinSize)
+            {
+                foreach(Vector2Int cell in region)
+                {
+                    map[cell.x, cell.y] = 0;
+                }
+            }
+        }
+
+        List<List<Vector2Int>> emptyRegions = GetRegions(0);
+
+        foreach (List<Vector2Int> region in emptyRegions)
+        {
+            if (region.Count < emptyRegionMinSize)
+            {
+                foreach (Vector2Int cell in region)
+                {
+                    map[cell.x, cell.y] = 1;
+                }
+            }
+        }
+    }
+
+    List<List<Vector2Int>> GetRegions(int cellValue)
+    {
+        List<List<Vector2Int>> regions = new List<List<Vector2Int>>();
+        bool[,] cellChecked = new bool[width, height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (cellChecked[x, y] == false && map[x, y] == cellValue)
+                {
+                    List<Vector2Int> region = GetRegion(x, y);
+                    regions.Add(region);
+
+                    foreach (Vector2Int cell in region)
+                    {
+                        cellChecked[cell.x, cell.y] = true;
+                    }
+                }
+            }
+        }
+        return regions;
+    }
+
+    List<Vector2Int> GetRegion(int startX, int startY)
+    {
+        List<Vector2Int> cells = new List<Vector2Int>();
+        bool[,] cellChecked = new bool[width, height];
+        int cellValue = map[startX, startY];
+
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        queue.Enqueue(new Vector2Int(startX, startY));
+        cellChecked[startX, startY] = true;
+
+        while (queue.Count > 0)
+        {
+            Vector2Int cell = queue.Dequeue();
+
+            cells.Add(cell);
+            for (int x = cell.x - 1; x <= cell.x + 1; x++)
+            {
+                for (int y = cell.y - 1; y <= cell.y + 1; y++)
+                {
+                    if (x >= 0 && x < width && y >= 0 && y < height && (x == cell.x || y == cell.y))
+                    {
+                        if (!cellChecked[x, y] && map[x, y] == cellValue)
+                        {
+                            cellChecked[x, y] = true;
+                            queue.Enqueue(new Vector2Int(x, y));
+                        }
+                    }
+                }
+            }
+        }
+        return cells;
+    }
+
     void PostProcessing()
     {
-
     }
 }

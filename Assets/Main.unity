@@ -246,10 +246,12 @@ MonoBehaviour:
   useRandomSeed: 1
   width: 192
   height: 108
-  fillPercentage: 40
+  fillPercentage: 43
+  filledRegionMinSize: 20
+  emptyRegionMinSize: 200
   smoothingIterations: 2
   smoothingThreshold: 4
-  branchingIterations: 3
+  branchingIterations: 4
 --- !u!4 &797933581
 Transform:
   m_ObjectHideFlags: 0
