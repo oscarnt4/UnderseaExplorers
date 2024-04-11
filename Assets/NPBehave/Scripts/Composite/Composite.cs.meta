@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f56223c7c51874bc6ae8d21cc381c3c2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Scripts/Composite/Composite.cs
+  uploadId: 323214

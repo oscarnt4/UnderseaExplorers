@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a5039a410611b45abb6fa04c9fccd9fa
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Editor/Tests/ClockTest.cs
+  uploadId: 323214

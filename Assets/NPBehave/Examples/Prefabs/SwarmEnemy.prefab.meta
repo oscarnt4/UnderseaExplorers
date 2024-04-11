@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 854cd8d3816484790b6a34c46956792d
+timeCreated: 1467383147
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Prefabs/SwarmEnemy.prefab
+  uploadId: 323214

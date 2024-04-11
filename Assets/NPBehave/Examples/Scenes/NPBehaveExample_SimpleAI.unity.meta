@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 91b55b67418db4c83af4476d58d0b54c
+timeCreated: 1467385550
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Scenes/NPBehaveExample_SimpleAI.unity
+  uploadId: 323214

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e111cb7d7720a433a97aad6ee45b8104
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Editor/DebuggerWindow.cs
+  uploadId: 323214

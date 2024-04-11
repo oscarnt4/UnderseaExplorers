@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d55aae12b3fdf4e14aa14b32c1bcaab4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Scripts/Decorator/BlackboardCondition.cs
+  uploadId: 323214

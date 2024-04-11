@@ -181,7 +181,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 54
+  orthographic size: 27
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -222,7 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 797933581}
   - component: {fileID: 797933580}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: LevelGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -242,16 +242,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generateNewLevel: 0
-  seed: 1
+  seed: 2
   useRandomSeed: 1
-  width: 192
-  height: 108
+  width: 96
+  height: 54
   fillPercentage: 43
   filledRegionMinSize: 20
   emptyRegionMinSize: 200
   smoothingIterations: 2
   smoothingThreshold: 4
   branchingIterations: 4
+  tiles:
+  - {fileID: 8506881513061907728, guid: 80be782c5f0e2fa4b928ff24550e3220, type: 3}
+  - {fileID: 3498932180495373996, guid: 9f5f27d9692e5e34d960c3b296d3a548, type: 3}
+  - {fileID: 2043500617684441871, guid: ffa56232877555246b21f98ac208f0ff, type: 3}
+  - {fileID: 2264852640976507678, guid: ecea5248e581d9e46b14f3363b24279b, type: 3}
+  - {fileID: 6001968850504158191, guid: 7bdc147a1a99ac1479190d83e0b6bf37, type: 3}
+  - {fileID: 8810791836652307116, guid: 846cf3b404d43204797dc9db04a64169, type: 3}
+  - {fileID: 536389504807276674, guid: a90310a2bc6635d4ea1af1ca903c4812, type: 3}
+  diverCount: 3
+  diverPrefab: {fileID: 2482895593834477127, guid: 5516a94d38ee8fb4a8d9add8bb18fee3, type: 3}
+  mermaidCount: 5
+  mermaidPrefab: {fileID: 2482895593834477127, guid: 56fe9d602fa2c9041bcf3fdce8fa4e5c, type: 3}
 --- !u!4 &797933581
 Transform:
   m_ObjectHideFlags: 0
@@ -261,7 +273,7 @@ Transform:
   m_GameObject: {fileID: 797933579}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.17888102, y: 0.46139947, z: -0.0075101233}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

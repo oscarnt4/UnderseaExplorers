@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cf44e68165bd94fd2b873d53b0db6773
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/README.md
+  uploadId: 323214

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 12b6d4a796bd84b8caed8ea77a1f27c2
+timeCreated: 1467669633
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Scripts/NPBehaveExampleClockThrottling.cs
+  uploadId: 323214

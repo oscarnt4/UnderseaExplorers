@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 548d225366c2744d08ecda86cba0344b
+timeCreated: 1467379520
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Prefabs/Player.prefab
+  uploadId: 323214

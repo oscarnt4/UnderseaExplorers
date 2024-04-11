@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 36d3b032f614c41ff81747d432c8998b
+timeCreated: 1467385568
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Scripts/ReusableSubtrees/EnemyB.cs
+  uploadId: 323214

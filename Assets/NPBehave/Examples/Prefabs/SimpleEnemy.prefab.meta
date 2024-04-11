@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b017e0fef61c44812a39c9eed84f2434
+timeCreated: 1467383109
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Prefabs/SimpleEnemy.prefab
+  uploadId: 323214

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3d7c877bc744948bfaf33d67d73fe180
+timeCreated: 1467385568
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Scripts/NPBehaveExampleHelloWorldAI.cs
+  uploadId: 323214

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f108d7566f97046b7af63a87a8dc9e7e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Scripts/Decorator/WaitForCondition.cs
+  uploadId: 323214

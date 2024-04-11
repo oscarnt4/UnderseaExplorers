@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 93ff234ca0d894893bb779db42f48853
+timeCreated: 1467413217
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Scenes/NPBehaveExample_HelloBlackboardsAI.unity
+  uploadId: 323214

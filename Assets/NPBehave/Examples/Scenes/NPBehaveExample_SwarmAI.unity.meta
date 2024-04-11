@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a1b14fb894c1043c0ab764f8d1f3e5fd
+timeCreated: 1467383128
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Scenes/NPBehaveExample_SwarmAI.unity
+  uploadId: 323214

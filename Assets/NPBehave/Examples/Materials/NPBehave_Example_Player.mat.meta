@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a3e59ff03f9de400293ae1b7d34167ac
+timeCreated: 1467379562
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 75884
+  packageName: NPBehave - Event Driven Code Based Behaviour Trees
+  packageVersion: 1.2.3
+  assetPath: Assets/NPBehave/Examples/Materials/NPBehave_Example_Player.mat
+  uploadId: 323214
