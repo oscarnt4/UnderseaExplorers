@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NPBehave;
+using static UnityEngine.GraphicsBuffer;
 
 public class DiverBehaviourTree : MonoBehaviour
 {
@@ -69,16 +70,27 @@ public class DiverBehaviourTree : MonoBehaviour
         RaycastHit2D immediateRight = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, -90) * transform.up, Mathf.Infinity, wallLayer);
         RaycastHit2D immediateLeft = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, 90) * transform.up, Mathf.Infinity, wallLayer);
 
-        Vector3 enemyPosition = ClosestEnemy().position;
+        Transform closestEnemy = ClosestObject(enemies);
+        Vector3 enemyPosition = enemies != null ? closestEnemy.position : Vector3.positiveInfinity;
         Vector3 enemyRelativePosition = this.transform.InverseTransformPoint(enemyPosition);
         Vector3 enemyDirection = enemyRelativePosition.normalized;
+
+        Transform closestTarget = ClosestObject(targets);
+        Vector3 targetPosition = targets != null ? closestTarget.position : Vector3.positiveInfinity;
+        Vector3 targetRelativePosition = this.transform.InverseTransformPoint(targetPosition);
+        Vector3 targetDirection = targetRelativePosition.normalized;
 
         blackboard["wallDistanceOnRight"] = hitOnRight.distance;
         blackboard["wallDistanceOnLeft"] = hitOnLeft.distance;
         blackboard["rightWallCloser"] = immediateRight.distance <= immediateLeft.distance;
+
         blackboard["distanceToNearestEnemy"] = enemyRelativePosition.magnitude;
         blackboard["enemyBehind"] = Mathf.Abs(enemyDirection.x) < 0.1f && enemyDirection.y < 0;
         blackboard["enemyToTheRight"] = enemyDirection.x > 0;
+
+        blackboard["targetDistance"] = targetRelativePosition.magnitude;
+        blackboard["targetInFront"] = Mathf.Abs(targetDirection.x) < 0.1f && targetDirection.y > 0;
+        blackboard["targetToTheRight"] = targetDirection.x > 0;
     }
 
     public void AddEnemy(GameObject enemy)
@@ -86,20 +98,26 @@ public class DiverBehaviourTree : MonoBehaviour
         enemies.Add(enemy);
     }
 
-    private Transform ClosestEnemy()
+    public void AddTarget(GameObject target)
+    {
+        targets.Add(target);
+    }
+
+    private Transform ClosestObject(List<GameObject> objects)
     {
         float currentLowestDistance = Mathf.Infinity;
-        Transform targetTransform = null;
-        foreach (GameObject enemy in enemies)
+        Transform objectTransform = null;
+        foreach (GameObject _object in objects)
         {
-            float distance = this.transform.InverseTransformPoint(enemy.transform.position).magnitude;
+            if (_object == null) continue;
+            float distance = this.transform.InverseTransformPoint(_object.transform.position).magnitude;
             if (distance < currentLowestDistance)
             {
                 currentLowestDistance = distance;
-                targetTransform = enemy.transform;
+                objectTransform = _object.transform;
             }
         }
-        return targetTransform;
+        return objectTransform;
     }
 
     private Root CirclingBehaviour()
@@ -115,7 +133,8 @@ public class DiverBehaviourTree : MonoBehaviour
         return new Root(new Service(() => UpdatePerception(),
                             new Selector(
                                 Evade(),
-                                EdgeSearchingBehaviour()
+                                new Selector(Persue(),                                
+                                    EdgeSearchingBehaviour())
                                 )
                             ));
     }
@@ -193,6 +212,44 @@ public class DiverBehaviourTree : MonoBehaviour
         if (tree != null && tree.CurrentState == Node.State.ACTIVE)
         {
             tree.Stop();
+        }
+    }
+
+    private Node Persue()
+    {
+        return new BlackboardCondition("targetDistance", Operator.IS_SMALLER_OR_EQUAL, visionDistance, Stops.SELF,
+                new Selector(
+                    TurnAwayFromWall(),
+                    new Sequence(
+                        PointAtTarget(),
+                        new Action(() => Move(1f)))
+                    ));
+    }
+
+    private Node PointAtTarget()
+    {
+        return new Selector(new BlackboardCondition("targetInFront", Operator.IS_EQUAL, false, Stops.SELF,
+                                new Selector(new BlackboardCondition("targetToTheRight", Operator.IS_EQUAL, true, Stops.SELF,
+                                                new Action(() => Turn(-1f))),
+                                            new Action(() => Turn(1f)))),
+                             new Action(() => Turn(0f)));
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        int targetIdx = -1;
+        for (int i = 0; i < targets.Count; i++)
+        {
+            if (collision.gameObject == targets[i])
+            {
+                targetIdx = i;
+            }
+        }
+
+        if (targetIdx != -1)
+        {
+            Destroy(targets[targetIdx]);
+            targets.RemoveAt(targetIdx);
         }
     }
 }

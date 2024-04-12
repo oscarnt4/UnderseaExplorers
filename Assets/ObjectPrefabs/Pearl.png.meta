@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4ec5be51b37baa84395dbe175f863be8
+guid: 0b456ca2c664f3e45b1e207a7b8a8563
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6058520249334213660
-    second: Ocean frame1 1_0
+      213: -4234091430829767758
+    second: Pearl_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ocean frame1 1_0
+      name: Pearl_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 0
-        width: 100
-        height: 100
+        width: 94
+        height: 96
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4e35ce1ceefcbeba0800000000000000
-      internalID: -6058520249334213660
+      spriteID: 2b3cdded64c7d35c0800000000000000
+      internalID: -4234091430829767758
       vertices: []
       indices: 
       edges: []
@@ -140,8 +140,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Ocean frame1 1_0: -6058520249334213660
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

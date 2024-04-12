@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         initialPosition = transform.position;
-        targets = levelGenerator.GetGameObjects();
+        targets = levelGenerator.GetAgents();
         initialCamSize = _camera.orthographicSize;
     }
 
@@ -31,12 +31,12 @@ public class CameraController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            targets = levelGenerator.GetGameObjects();
+            targets = levelGenerator.GetAgents();
             SwitchTarget(-1);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            targets = levelGenerator.GetGameObjects();
+            targets = levelGenerator.GetAgents();
             SwitchTarget(1);
         }
         if (!transitioning && currentTargetIndex != -1 && targets[currentTargetIndex] != null)

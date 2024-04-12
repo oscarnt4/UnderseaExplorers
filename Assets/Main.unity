@@ -257,8 +257,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generateNewLevel: 0
-  seed: 5
-  useRandomSeed: 1
+  seed: 4
+  useRandomSeed: 0
   width: 96
   height: 54
   fillPercentage: 43
@@ -277,8 +277,11 @@ MonoBehaviour:
   - {fileID: 536389504807276674, guid: a90310a2bc6635d4ea1af1ca903c4812, type: 3}
   diverCount: 3
   diverPrefab: {fileID: 2482895593834477127, guid: 5516a94d38ee8fb4a8d9add8bb18fee3, type: 3}
-  mermaidCount: 10
+  mermaidCount: 5
   mermaidPrefab: {fileID: 2482895593834477127, guid: 56fe9d602fa2c9041bcf3fdce8fa4e5c, type: 3}
+  pearlCount: 10
+  pearlPrefab: {fileID: 3489800879329103226, guid: 6efb1a36b79c44d45957898295ad03c3, type: 3}
+  pearlWallDistance: 5
 --- !u!4 &797933581
 Transform:
   m_ObjectHideFlags: 0

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4ec5be51b37baa84395dbe175f863be8
+guid: ef3a86dfbd7b62f4caaea342ac60de60
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6058520249334213660
-    second: Ocean frame1 1_0
+      213: -5076653760574825616
+    second: Ocean frame2_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ocean frame1 1_0
+      name: Ocean frame2_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4e35ce1ceefcbeba0800000000000000
-      internalID: -6058520249334213660
+      spriteID: 07b59415d4a1c89b0800000000000000
+      internalID: -5076653760574825616
       vertices: []
       indices: 
       edges: []
@@ -141,7 +141,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Ocean frame1 1_0: -6058520249334213660
+      Ocean frame2_0: -5076653760574825616
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

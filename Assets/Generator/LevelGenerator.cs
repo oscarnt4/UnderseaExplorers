@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] GameObject diverPrefab;
     [SerializeField] int mermaidCount;
     [SerializeField] GameObject mermaidPrefab;
+    [SerializeField] int pearlCount;
+    [SerializeField] GameObject pearlPrefab;
+    [SerializeField] int pearlWallDistance;
 
     private int[,] map;
     private System.Random rnd;
@@ -35,6 +39,7 @@ public class LevelGenerator : MonoBehaviour
     private List<GameObject> levelTiles;
     private List<GameObject> divers;
     private List<GameObject> mermaids;
+    private List<GameObject> pearls;
 
     private void Awake()
     {
@@ -42,24 +47,28 @@ public class LevelGenerator : MonoBehaviour
         levelTiles = new List<GameObject>();
         divers = new List<GameObject>();
         mermaids = new List<GameObject>();
+        pearls = new List<GameObject>();
     }
 
     void Start()
     {
         GenerateNewLevel();
+        SpawnPearls();
         SpawnAgents();
     }
 
     void Update()
     {
-        if (generateNewLevel)
+        if (generateNewLevel || Input.GetKeyDown(KeyCode.Space))
         {
             ClearAgents();
             ClearTiles();
+            ClearPearls();
             if (useRandomSeed) seed = DateTime.Now.Ticks.ToString();
             GenerateNewLevel();
-            generateNewLevel = false;
+            SpawnPearls();
             SpawnAgents();
+            generateNewLevel = false;
         }
         CheckDestroyedDivers();
     }
@@ -432,16 +441,28 @@ public class LevelGenerator : MonoBehaviour
     void SpawnAgents()
     {
         List<List<Vector2Int>> emptyRegions = GetRegions(0);
-        List<Vector2Int> emptyRegion = emptyRegions[rnd.Next(0, emptyRegions.Count)];
+        List<Vector2Int> emptyRegion = emptyRegions[0];
 
         for (int i = 0; i < diverCount; i++)
         {
-            Vector2Int spawnTile = emptyRegion[rnd.Next(0, emptyRegion.Count)];
-            emptyRegion.Remove(spawnTile);
-            Vector2 spawnLocation = new Vector2(spawnTile.x - width / 2, spawnTile.y - height / 2);
-            Quaternion spawnRotation = Quaternion.Euler(0, 0, rnd.Next(0, 360));
-            GameObject diver = Instantiate(diverPrefab, new Vector3(spawnLocation.x, spawnLocation.y, 0f), spawnRotation);
-            divers.Add(diver);
+            bool tooClose = true;
+            Vector2 spawnLocation = Vector2.zero;
+            while (tooClose && emptyRegion.Count > 0)
+            {
+                Vector2Int spawnTile = emptyRegion[rnd.Next(0, emptyRegion.Count)];
+                emptyRegion.Remove(spawnTile);
+                spawnLocation = new Vector2(spawnTile.x - width / 2, spawnTile.y - height / 2);
+                tooClose = false;
+                foreach (GameObject pearl in pearls) 
+                    if (Vector2.Distance(spawnLocation, pearl.transform.position) <= 10f) 
+                        tooClose = true;
+            }
+            if (!tooClose)
+            {
+                Quaternion spawnRotation = Quaternion.Euler(0, 0, rnd.Next(0, 360));
+                GameObject diver = Instantiate(diverPrefab, new Vector3(spawnLocation.x, spawnLocation.y, 0f), spawnRotation);
+                divers.Add(diver);
+            }
         }
         for (int i = 0; i < mermaidCount; i++)
         {
@@ -453,8 +474,12 @@ public class LevelGenerator : MonoBehaviour
                 emptyRegion.Remove(spawnTile);
                 spawnLocation = new Vector2(spawnTile.x - width / 2, spawnTile.y - height / 2);
                 tooClose = false;
-                foreach (GameObject diver in divers) if (Vector2.Distance(spawnLocation, diver.transform.position) <= 20f) tooClose = true;
-                foreach (GameObject _mermaid in mermaids) if (Vector2.Distance(spawnLocation, _mermaid.transform.position) <= 20f) tooClose = true;
+                foreach (GameObject diver in divers) 
+                    if (Vector2.Distance(spawnLocation, diver.transform.position) <= 20f) 
+                        tooClose = true;
+                foreach (GameObject _mermaid in mermaids) 
+                    if (Vector2.Distance(spawnLocation, _mermaid.transform.position) <= 20f) 
+                        tooClose = true;
             }
             if (!tooClose)
             {
@@ -470,6 +495,10 @@ public class LevelGenerator : MonoBehaviour
             {
                 diver.GetComponent<DiverBehaviourTree>().AddEnemy(mermaid);
                 mermaid.GetComponent<MermaidBehaviourTree>().AddTarget(diver);
+            }
+            foreach (GameObject pearl in pearls)
+            {
+                diver.GetComponent<DiverBehaviourTree>().AddTarget(pearl);
             }
         }
     }
@@ -488,7 +517,96 @@ public class LevelGenerator : MonoBehaviour
         mermaids.Clear();
     }
 
-    public List<GameObject> GetGameObjects()
+    void SpawnPearls()
+    {
+        List<List<Vector2Int>> emptyRegions = GetRegions(0);
+        List<Vector2Int> emptyRegion = emptyRegions[0];
+
+        for (int i = 0; i < pearlCount; i++)
+        {
+            bool badPosition = true;
+            Vector2 spawnLocation = Vector2.zero;
+            while (badPosition && emptyRegion.Count > 0)
+            {
+                Vector2Int spawnTile = emptyRegion[rnd.Next(0, emptyRegion.Count)];
+                emptyRegion.Remove(spawnTile);
+                spawnLocation = new Vector2(spawnTile.x - width / 2, spawnTile.y - height / 2);
+                badPosition = false;
+                int distanceFromClosestWall = GetDistanceFromNearestWall(spawnTile.x, spawnTile.y);
+                badPosition = distanceFromClosestWall > pearlWallDistance || distanceFromClosestWall <= 3;
+                foreach (GameObject pearl in pearls)
+                    if (Vector2.Distance(spawnLocation, pearl.transform.position) <= 20f)
+                        badPosition = true;
+            }
+            if (!badPosition)
+            {
+                GameObject pearl = Instantiate(pearlPrefab, new Vector3(spawnLocation.x, spawnLocation.y, 0f), transform.rotation);
+                pearls.Add(pearl);
+            }
+        }
+    }
+
+    private int GetDistanceFromNearestWall(int x, int y)
+    {
+        List<int> distances = new List<int>();
+        int cellDistance = 0;
+        // north
+        while (true)
+        {
+            cellDistance++;
+            if (map[x + cellDistance, y] == 1)
+            {
+                distances.Add(cellDistance); break;
+            }
+        }
+        // south
+        cellDistance = 0;
+        while (true)
+        {
+            cellDistance++;
+            if (map[x - cellDistance, y] == 1)
+            {
+                distances.Add(cellDistance); break;
+            }
+        }
+        // east
+        cellDistance = 0;
+        while (true)
+        {
+            cellDistance++;
+            if (map[x, y + cellDistance] == 1)
+            {
+                distances.Add(cellDistance); break;
+            }
+        }
+        // west
+        cellDistance = 0;
+        while (true)
+        {
+            cellDistance++;
+            if (map[x, y - cellDistance] == 1)
+            {
+                distances.Add(cellDistance); break;
+            }
+        }
+        int shortestDistance = 100000;
+        foreach (int i in distances)
+        {
+            if (i < shortestDistance) shortestDistance = i;
+        }
+        return shortestDistance;
+    }
+
+    void ClearPearls()
+    {
+        for (int i = 0; i < pearls.Count; i++)
+        {
+            if (pearls[i] != null && pearls[i].activeSelf) Destroy(pearls[i]);
+        }
+        pearls.Clear();
+    }
+
+    public List<GameObject> GetAgents()
     {
         List<GameObject> list = new List<GameObject>();
         list.AddRange(divers);

@@ -60,12 +60,13 @@ the amount of movement for a certain number of updates, and then executing it in
 continues to freely rotate throughout the entirety of the motion as it does not ruin the effect of the swimming
 pulsations. 
 
-The basic behaviour of the diver is to follow the reef around the edge until it finds a mermaid, at which point it 
-will immediately swim in the opposite direction. The edge searching behaviour is comprised of two parts, turning 
-towards the wall and turning away from it. The blackboard is updated via a raycast from the diver at +-45 degrees 
-to determine which side the wall is on, and how far the diver is from it. If the diver is too far then it will turn 
-into the wall, if it is too near it will slow down and turn away from it. If both walls are close there is another 
-blackboard condition which lets the diver know which is closer and it will carefully navigate between them.
+The basic behaviour of the diver is to follow the reef around the edge until it finds a pearl, at which point it 
+goes to collect it, or a mermaid, at which point it will immediately swim in the opposite direction. The edge 
+searching behaviour is comprised of two parts, turning towards the wall and turning away from it. The blackboard is 
+updated via a raycast from the diver at +-45 degrees to determine which side the wall is on, and how far the diver 
+is from it. If the diver is too far then it will turn into the wall, if it is too near it will slow down and turn 
+away from it. If both walls are close there is another blackboard condition which lets the diver know which is 
+closer and it will carefully navigate between them.
 
 When the diver evades the mermaids based on their proximity. If they get too close it will first determine if any
 walls are near using the same turn away from wall action as before. If there are no walls close by it will face 
@@ -73,6 +74,11 @@ the opposite direction of the mermaid and continue at full speed. The closest me
 blackboard variable which is populated by a function which iterates through the list of mermaids (enemies) and 
 checks the distance from each before outputting the transform of the closest one. This value is then used to 
 calculate the exact position of the mermaid and let the diver know which way to turn to face the opposite direction.
+
+If the diver come close to a pearl and there are no mermaids around it well head towards it in a similar way to how
+it avoids the mermaids. The only real difference is that it aims towards the pearl rather than away from it.
+
+The priority order for this is evading mermaids > persuing pearls > searching the edge of the region.
 
 MERMAID
 
