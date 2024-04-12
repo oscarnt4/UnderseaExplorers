@@ -258,7 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generateNewLevel: 0
   seed: 4
-  useRandomSeed: 0
+  useRandomSeed: 1
   width: 96
   height: 54
   fillPercentage: 43
