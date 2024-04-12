@@ -7,6 +7,11 @@ public class DiverBehaviourTree : MonoBehaviour
 {
     public int behaviour;
     public LayerMask wallLayer;
+    public float visionDistance = 8f;
+    public float wallAvoidDistance = 3f;
+    public float wallHugDistance = 5f;
+    [Range(0f, 1f)]
+    public float wallAvoidanceFactor = 0.8f;
 
     private DiverMovement movement;
     private List<GameObject> targets;
@@ -55,10 +60,9 @@ public class DiverBehaviourTree : MonoBehaviour
 
     private void UpdatePerception()
     {
-        Debug.Log("1");
         Debug.DrawRay(transform.position, Quaternion.Euler(0, 0, 45) * transform.up * 10, Color.red);
         Debug.DrawRay(transform.position, Quaternion.Euler(0, 0, -45) * transform.up * 10, Color.blue);
-        Debug.Log("2");
+
         RaycastHit2D hitOnRight = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, -45) * transform.up, Mathf.Infinity, wallLayer);
         RaycastHit2D hitOnLeft = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, 45) * transform.up, Mathf.Infinity, wallLayer);
 
@@ -118,14 +122,13 @@ public class DiverBehaviourTree : MonoBehaviour
 
     private Node EdgeSearchingBehaviour()
     {
-        return new Service(() => UpdatePerception(),
-                            new Selector(
-                                TurnAwayFromWall(),
-                                TurnTowardsWall(),
-                                new Sequence(
-                                    new Action(() => Turn(0f)),
-                                    new Action(() => Move(1f)))
-                            ));
+        return new Selector(
+                    TurnAwayFromWall(),
+                    TurnTowardsWall(),
+                    new Sequence(
+                        new Action(() => Turn(0f)),
+                        new Action(() => Move(1f)))
+                            );
     }
 
     private Node TurnAwayFromWall()
@@ -133,12 +136,12 @@ public class DiverBehaviourTree : MonoBehaviour
         return new Selector(
                     new Sequence(
                         new BlackboardCondition("rightWallCloser", Operator.IS_EQUAL, true, Stops.SELF,
-                            new BlackboardCondition("wallDistanceOnRight", Operator.IS_SMALLER_OR_EQUAL, 2f, Stops.SELF,
-                                new Action(() => Turn(1f)))),
+                            new BlackboardCondition("wallDistanceOnRight", Operator.IS_SMALLER_OR_EQUAL, wallAvoidDistance, Stops.SELF,
+                                new Action(() => Turn(wallAvoidanceFactor)))),
                         new Action(() => Move(0.3f))),
                     new Sequence(
-                        new BlackboardCondition("wallDistanceOnLeft", Operator.IS_SMALLER_OR_EQUAL, 2f, Stops.SELF,
-                            new Action(() => Turn(-1f))),
+                        new BlackboardCondition("wallDistanceOnLeft", Operator.IS_SMALLER_OR_EQUAL, wallAvoidDistance, Stops.SELF,
+                            new Action(() => Turn(-wallAvoidanceFactor))),
                         new Action(() => Move(0.3f))
                         )
                     );
@@ -149,11 +152,11 @@ public class DiverBehaviourTree : MonoBehaviour
         return new Selector(
                     new Sequence(
                         new BlackboardCondition("rightWallCloser", Operator.IS_EQUAL, true, Stops.SELF,
-                            new BlackboardCondition("wallDistanceOnRight", Operator.IS_GREATER_OR_EQUAL, 6f, Stops.SELF,
+                            new BlackboardCondition("wallDistanceOnRight", Operator.IS_GREATER_OR_EQUAL, wallHugDistance, Stops.SELF,
                                 new Action(() => Turn(-0.3f)))),
                         new Action(() => Move(1f))),
                     new Sequence(
-                            new BlackboardCondition("wallDistanceOnLeft", Operator.IS_GREATER_OR_EQUAL, 6f, Stops.SELF,
+                            new BlackboardCondition("wallDistanceOnLeft", Operator.IS_GREATER_OR_EQUAL, wallHugDistance, Stops.SELF,
                                 new Action(() => Turn(0.3f))),
                         new Action(() => Move(1f))
                         )
@@ -162,7 +165,7 @@ public class DiverBehaviourTree : MonoBehaviour
 
     private Node Evade()
     {
-        return new BlackboardCondition("distanceToNearestEnemy", Operator.IS_SMALLER_OR_EQUAL, 20f, Stops.SELF,
+        return new BlackboardCondition("distanceToNearestEnemy", Operator.IS_SMALLER_OR_EQUAL, visionDistance, Stops.SELF,
                 new Selector(
                     TurnAwayFromWall(),
                     new Sequence(
@@ -178,5 +181,18 @@ public class DiverBehaviourTree : MonoBehaviour
                                                 new Action(() => Turn(1f))),
                                             new Action(() => Turn(-1f)))),
                              new Action(() => Turn(0f)));
+    }
+
+    private void OnDestroy()
+    {
+        StopBehaviorTree();
+    }
+
+    public void StopBehaviorTree()
+    {
+        if (tree != null && tree.CurrentState == Node.State.ACTIVE)
+        {
+            tree.Stop();
+        }
     }
 }

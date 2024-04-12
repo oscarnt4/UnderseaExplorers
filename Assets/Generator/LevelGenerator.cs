@@ -61,6 +61,7 @@ public class LevelGenerator : MonoBehaviour
             generateNewLevel = false;
             SpawnAgents();
         }
+        CheckDestroyedDivers();
     }
 
     void GenerateNewLevel()
@@ -428,7 +429,7 @@ public class LevelGenerator : MonoBehaviour
         levelTiles.Clear();
     }
 
-    private void SpawnAgents()
+    void SpawnAgents()
     {
         List<List<Vector2Int>> emptyRegions = GetRegions(0);
         List<Vector2Int> emptyRegion = emptyRegions[rnd.Next(0, emptyRegions.Count)];
@@ -473,17 +474,35 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    private void ClearAgents()
+    void ClearAgents()
     {
         for (int i = 0; i < divers.Count; i++)
         {
-            DestroyImmediate(divers[i]);
+            if (divers[i] != null && divers[i].activeSelf) Destroy(divers[i]);
         }
         for (int i = 0; i < mermaids.Count; i++)
         {
-            DestroyImmediate(mermaids[i]);
+            if (mermaids[i] != null && mermaids[i].activeSelf) Destroy(mermaids[i]);
         }
         divers.Clear();
         mermaids.Clear();
+    }
+
+    public List<GameObject> GetGameObjects()
+    {
+        List<GameObject> list = new List<GameObject>();
+        list.AddRange(divers);
+        list.AddRange(mermaids);
+        return list;
+    }
+
+    void CheckDestroyedDivers()
+    {
+        int diverDestroyedIdx = -1;
+        for (int i = 0; i < divers.Count; i++)
+        {
+            if (divers[i] == null || !divers[i].activeSelf) diverDestroyedIdx = i;
+        }
+        if (diverDestroyedIdx != -1) divers.RemoveAt(diverDestroyedIdx);
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class DiverMovement : MonoBehaviour
 {
@@ -15,10 +16,12 @@ public class DiverMovement : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private float storedMovement;
     private int updateCount;
+    private Animator _animator;
 
     void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
         updateCount = new System.Random().Next(0, stationaryDuration + movementDuration);
     }
 
@@ -31,6 +34,7 @@ public class DiverMovement : MonoBehaviour
     {
         Move();
         Turn();
+        Animate();
     }
 
     private void Move()
@@ -66,5 +70,17 @@ public class DiverMovement : MonoBehaviour
     public void TurnBehaviour(float amount)
     {
         turnAmount = (amount > 1) ? 1 : (amount < -1) ? -1 : amount;
+    }
+
+    private void Animate()
+    {
+        if (_rigidbody.velocity.magnitude > 0f)
+        {
+            _animator.SetBool("isMoving", true);
+        }
+        else
+        {
+            _animator.SetBool("isMoving", false);
+        }
     }
 }

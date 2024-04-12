@@ -7,6 +7,14 @@ public class MermaidBehaviourTree : MonoBehaviour
 {
     public int behaviour;
     public LayerMask wallLayer;
+    public float visionDistance = 10f;
+    public float wallDistance = 3f;
+    [Range(0f, 1f)]
+    public float wallAvoidanceFactor = 0.8f;
+    public float persuitDuration = 5f;
+    [Range(0f, 1f)]
+    public float figure8Size = 0.8f;
+
 
     private List<GameObject> targets;
     private MermaidMovement movement;
@@ -14,6 +22,7 @@ public class MermaidBehaviourTree : MonoBehaviour
     private Blackboard blackboard;
     private Quaternion startRotation;
     private bool loopAnticlockwise;
+    private float timeSinceLoopSwitch;
 
     void Awake()
     {
@@ -25,6 +34,7 @@ public class MermaidBehaviourTree : MonoBehaviour
         movement = GetComponent<MermaidMovement>();
         startRotation = transform.rotation;
         loopAnticlockwise = false;
+        timeSinceLoopSwitch = 0f;
 
         tree = CreateBehaviourTree();
         blackboard = tree.Blackboard;
@@ -67,9 +77,15 @@ public class MermaidBehaviourTree : MonoBehaviour
         RaycastHit2D immediateRight = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, -90) * transform.up, Mathf.Infinity, wallLayer);
         RaycastHit2D immediateLeft = Physics2D.Raycast(transform.position, Quaternion.Euler(0, 0, 90) * transform.up, Mathf.Infinity, wallLayer);
 
-        if (Mathf.Abs(transform.rotation.eulerAngles.z - startRotation.eulerAngles.z) < 0.5f) loopAnticlockwise = !loopAnticlockwise;
+        if (Mathf.Abs(transform.rotation.eulerAngles.z - startRotation.eulerAngles.z) < 0.5f && timeSinceLoopSwitch > 1f)
+        {
+            timeSinceLoopSwitch = 0f;
+            loopAnticlockwise = !loopAnticlockwise;
+        }
+        timeSinceLoopSwitch += Time.deltaTime;
 
-        Vector3 targetPosition = ClosestTarget().position;
+        Transform closestTarget = ClosestTarget();
+        Vector3 targetPosition = closestTarget == null ? Vector3.positiveInfinity : closestTarget.position;
         Vector3 targetRelativePosition = this.transform.InverseTransformPoint(targetPosition);
         Vector3 targetDirection = targetRelativePosition.normalized;
 
@@ -94,6 +110,7 @@ public class MermaidBehaviourTree : MonoBehaviour
         Transform targetTransform = null;
         foreach (GameObject target in targets)
         {
+            if (target == null) continue;
             float distance = this.transform.InverseTransformPoint(target.transform.position).magnitude;
             if (distance < currentLowestDistance)
             {
@@ -109,7 +126,7 @@ public class MermaidBehaviourTree : MonoBehaviour
     {
         return new Root(new Service(() => UpdatePerception(),
                             new Selector(
-                                new TimeMax(5f, true, Persue()),
+                                new TimeMax(persuitDuration, true, Persue()),
                                 Figure8Behaviour()
                                 )
                             ));
@@ -127,34 +144,34 @@ public class MermaidBehaviourTree : MonoBehaviour
         return new Selector(
                     new Sequence(
                         new BlackboardCondition("rightWallCloser", Operator.IS_EQUAL, true, Stops.SELF,
-                            new BlackboardCondition("wallDistanceOnRight", Operator.IS_SMALLER_OR_EQUAL, 2f, Stops.SELF,
-                                new Action(() => Turn(1f)))),
+                            new BlackboardCondition("wallDistanceOnRight", Operator.IS_SMALLER_OR_EQUAL, wallDistance, Stops.SELF,
+                                new Action(() => Turn(wallAvoidanceFactor)))),
                         new Action(() => Move(0.3f))),
                     new Sequence(
-                        new BlackboardCondition("wallDistanceOnLeft", Operator.IS_SMALLER_OR_EQUAL, 2f, Stops.SELF,
-                            new Action(() => Turn(-1f))),
+                        new BlackboardCondition("wallDistanceOnLeft", Operator.IS_SMALLER_OR_EQUAL, wallDistance, Stops.SELF,
+                            new Action(() => Turn(-wallAvoidanceFactor))),
                         new Action(() => Move(0.3f))
                         ));
     }
 
     private Node Figure8Motion()
     {
-        return new BlackboardCondition("wallDistanceOnRight", Operator.IS_GREATER_OR_EQUAL, 2f, Stops.SELF,
-                new BlackboardCondition("wallDistanceOnLeft", Operator.IS_GREATER_OR_EQUAL, 2f, Stops.SELF,
+        return new BlackboardCondition("wallDistanceOnRight", Operator.IS_GREATER_OR_EQUAL, wallDistance, Stops.SELF,
+                new BlackboardCondition("wallDistanceOnLeft", Operator.IS_GREATER_OR_EQUAL, wallDistance, Stops.SELF,
                     new Selector(new BlackboardCondition("loopAnticlockwise", Operator.IS_EQUAL, true, Stops.SELF,
                                     new Sequence(
-                                        new Action(() => Turn(0.3f)),
+                                        new Action(() => Turn(1f - figure8Size)),
                                         new Action(() => Move(1f))
                                         )),
                                 new Sequence(
-                                    new Action(() => Turn(-0.3f)),
+                                    new Action(() => Turn(-1f + figure8Size)),
                                     new Action(() => Move(1f))))
                     ));
     }
 
     private Node Persue()
     {
-        return new BlackboardCondition("distanceToNearestTarget", Operator.IS_SMALLER_OR_EQUAL, 20f, Stops.SELF,
+        return new BlackboardCondition("distanceToNearestTarget", Operator.IS_SMALLER_OR_EQUAL, visionDistance, Stops.SELF,
                 new Selector(
                     TurnAwayFromWall(),
                     new Sequence(
@@ -170,5 +187,36 @@ public class MermaidBehaviourTree : MonoBehaviour
                                                 new Action(() => Turn(-1f))),
                                             new Action(() => Turn(1f)))),
                              new Action(() => Turn(0f)));
+    }
+
+    private void OnDestroy()
+    {
+        StopBehaviorTree();
+    }
+
+    public void StopBehaviorTree()
+    {
+        if (tree != null && tree.CurrentState == Node.State.ACTIVE)
+        {
+            tree.Stop();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        int targetIdx = -1;
+        for (int i = 0; i < targets.Count; i++)
+        {
+            if (collision.gameObject == targets[i])
+            {
+                targetIdx = i;
+            }
+        }
+
+        if (targetIdx != -1)
+        {
+            Destroy(targets[targetIdx]);
+            targets.RemoveAt(targetIdx);
+        }
     }
 }

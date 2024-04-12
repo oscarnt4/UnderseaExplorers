@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -156,7 +157,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 1, g: 0.49803925, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -207,11 +208,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.5, y: -0.5, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f8917f4419561b4bbe8b61d72d982f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionSpeed: 1
+  levelGenerator: {fileID: 797933580}
 --- !u!1 &797933579
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generateNewLevel: 0
-  seed: 2
+  seed: 5
   useRandomSeed: 1
   width: 96
   height: 54
@@ -262,7 +277,7 @@ MonoBehaviour:
   - {fileID: 536389504807276674, guid: a90310a2bc6635d4ea1af1ca903c4812, type: 3}
   diverCount: 3
   diverPrefab: {fileID: 2482895593834477127, guid: 5516a94d38ee8fb4a8d9add8bb18fee3, type: 3}
-  mermaidCount: 5
+  mermaidCount: 10
   mermaidPrefab: {fileID: 2482895593834477127, guid: 56fe9d602fa2c9041bcf3fdce8fa4e5c, type: 3}
 --- !u!4 &797933581
 Transform:
