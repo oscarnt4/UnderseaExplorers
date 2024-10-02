@@ -1,7 +1,7 @@
 # UnderseaExplorers
 Interactive Agents and Procedural Generation coursework
 
-## Video
+## Demo Video
 
 [![Undersea Explorers Demo Video](https://img.youtube.com/vi/Xg4p_Rpp4bc/0.jpg)](https://www.youtube.com/watch?v=Xg4p_Rpp4bc)
 
